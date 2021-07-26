@@ -1,0 +1,40 @@
+import seaborn as sns
+
+we have a datframe containing wine data
+compare prices of tesco, lidl, aldi
+
+
+Univariate Analysis 
+Creating a histogram
+
+sns.distplot(df['alcohol'])
+sns.distplot(df['alcohol'], kde=False, bins=10)
+sns.distplot(df['alcohol'], hist=False, rug=True)
+sns.distplot(df['alcohol'], hist=False, rug=True, kde_kw={'shade': True})
+
+
+Regression Plot(Bivariate)
+
+sns.regplot(x='alcohol', y='pH', data=df)
+
+Seaborn Styles
+
+sns.set()
+df['tuition'].plot.hist()
+
+for style in ['white', 'dark', 'whitegrid', 'darkgrid', 'ticks']:
+	sns.set_style(style)
+	sns.displot(df['tuition'])
+	plt.show()
+
+despine()
+sns.set_style('white')
+sns.displot(df['tuition'])
+sns.despine(left=True)
+
+Seaborn Colors
+
+for p in sns.pallettes.SEABORN_PALLETS: #six default palletes => deep, muted, pastel, bright, dark, colorblind
+	sns.set_pallete(p)
+	sns.distplot(df['Tuition'])
+

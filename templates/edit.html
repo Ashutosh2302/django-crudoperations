@@ -1,0 +1,29 @@
+{% extends 'index.html' %}
+{% block content %}
+<div class="row">
+
+<div class='col-lg-5 col-md-5 col-12 offset-3 bg-light'>
+<h3 class="text-center p-1" style="background-color:lightgreen">Edit Data</h3>
+        <form action="{% url 'edit' id %}" method="POST">
+            {% csrf_token %}
+         
+            <div class="form-group">
+        
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp" placeholder="Name" value="{{data.name}}">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="Email" value={{data.email}}>
+            </div>
+            <div class="form-group">
+                <label for="Phone">Phone</label>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="{{data.phone}}">
+                <small id="emailHelp" class="form-text text-muted">We'll never share your phone no with anyone else.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    
+        </div>
+</div>
+{% endblock content %}

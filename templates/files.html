@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+<head>
+    <title></title>
+</head>
+
+    {% for f in file %}
+    <h2>{{f.title}}</h2>
+    <a href='{{f.adminupload.url}}' download='{{f.admindownload.url}}'>Download</a>
+    {% endfor %}
+
+
+</body>
+</html>

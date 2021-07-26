@@ -1,0 +1,142 @@
+df.shape => (columns, rows)
+
+dogs['weight_kg'] =>gives you series
+dogs[['weight_kg']] =>gives you datafram
+dogs[1:4] => dataframe slicing, gives you first 3 rows
+
+SORTING AND SUBSETTING
+df.sort_values()
+	args- <column name>, <ascending=False>(optional)
+	
+df[<column name or list of column names>]
+
+Conditions
+dogs[dogs["height_cm"] >50 ] => gives you the dogs with height greater than 50cm
+dogd[dogs["breed"] == "Labrador"]
+dogs[dogs["date_of_birth"] > "2015-01-01"]
+
+is_labrador = dogs["breed"] == "Labrador"
+is_brown = dogs["color"] == "Brown"
+dogs[is_labrador & is_brown] => gives you dogs that are labradors and brown in color
+
+
+isin()
+is_black_or_brown = dogs["color"].isin(["Black", "Brown"]) => gives you dogs whose color is brown or black
+
+
+looping over dataframes
+
+iterrows
+for label, row in brics.iterrows():
+	print(label+ ':' + row)
+	
+
+for label, row in brics.iterrows():
+	print(label+ ':' + row['capital'])
+
+
+NEW COLUMNS
+Adding new column 
+   for label, row in brics.iterrows():
+	brics.loc[label, "name_length"] = len(row['country']) =>this will add data to a new column "name_length" for every country
+ dogs["height_m"] = dogs["height_cm"]/100  =>this will create a new column in data frame 'height_m'
+ dogs["bmi"] = dogs["weight_kg"] / dogs["height_m"] ** 2
+
+
+Multiple manipulations-
+
+Figure out the names of skinny tall dogs-
+skinny means their bmi should be less than 100
+
+skinny_dogs = dogs[dogs["bmi"] < 100]
+tall_dogs = skinny_dogs.sort_values("heigth_cm", ascending=False)
+talldogs[["name", "height", "bmi"]] => this will gives you the dogs (skinny and tall)
+
+SUMMARY STATISTICS 
+dogs["height_cm"].mean() 
+.median() .mode() .min() .max() .var() .std() .sum() .quantile()
+dogs["date_of_birth"].min() =>shows the oldest dog
+dogs["date_of_birth"].max() =>shows the youngest dog
+
+
+
+def pct30(column):  #function to calculate 30th percentile of a column
+	return column.quantile(0.3)
+dogs["weight_kg"].agg(pct30) #30th percentile for the column
+dogs[["weight_kg", "height_cm"]].agg(pct30) #30th percentile for both the columns
+
+def pct40(column):
+	return column.quantile(0.4)
+dogs["weight_kg"].agg([pct30, pct40]) #computes 30th and 40th percentile of "weight_kg" column
+
+
+
+COUNTING
+
+assume a dataframe "vet_visits" that denotes vet visits 
+assume some dogs visted the vet twice
+but we want uniques names from the dataframe and not duplicates
+
+unique_dogs = vet_visits.drop_duplicates(subset="name") #this will remove the duplicates from the dataframe based on column "name"
+unique_dogs = vet_visits.drop_duplicates(subset=["name", "breed"]) #this will remove the duplicates from the dataframe based on pair of columns "name" and "breed"
+
+
+unique_dogs["breed"].value_counts() #to count the dogs of each breed
+		=> arg => .value_counts(sort=True) # to get the counts in sorted order
+		       => .value_counts(normalize=True) # get the percentage of dogs went to vet
+			
+summaries by group
+#Does one color dog weighs more than another on average?
+#Are female dogs taller than males on average?
+
+dogs[dogs["color"] == "Black"]["weight_kg"].mean()
+dogs[dogs["color"] == "Brown"]["weight_kg"].mean()
+dogs[dogs["color"] == "white"]["weight_kg"].mean()
+
+but the above is a lot of code
+easier way => groupby()
+dogs.groupby("color")["weight_kg"].mean() #this will give the mean weight for each dog color
+dogs.groupby(["color", "breed"])["weight_kg"].mean() #this will give the mean weight of each breed of each color
+dogs.groupby(["color", "breed"])[["weight_kg", "height_cm"]].mean() #this will give the mean weight and height of each breed of each color
+
+
+
+loc
+brics.loc[['RU']] => need to pass index for rows to fetch
+brics.loc[['RU','IN','CH'], ['capital', 'population']] =>gives you data from rows RU, IN, CH and columns 'capital' and 'position'
+brics.loc[:, ['capital', 'population']] =>gives all rows and 'capital', 'population' columns
+
+iloc
+brics.iloc[[1,2,3]] =>just need to pass index to get the rows
+brics.iloc[[1,2,3], [0,1]] =>gives data from rows 1,2,3 and columns 0,1
+brics.iloc[:, [0,1]] =>gives all rows and 0,1 columns
+
+loc and iloc are pretty similar only difference is how you refer to rows and columns
+
+
+
+
+   
+
+
+Visulizing data
+import matplotlib.pyplot as plt
+
+dogs["height_cm"].hist()
+plt.show()
+
+
+avg_weight_by_breed = dogs.groupby("breed")["weight_kg"].mean()
+avg_weight_by_breed.plot(kind="bar", title ="some title")
+plt.show()
+
+
+dogs[dogs["sex"] == "F"]["height_cm"].hist()(alpha=0.7)
+dogs[dogs["sex"] == "M"]["height_cm"].hist()(alpha=0.7)
+plt.legend(["F", "M"])
+plt.show()
+
+
+#plotting missing values
+dogs.isna().sum().plot(kind="bar")
+plt.show() 
